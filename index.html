@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hitung KPR Rumah Fixed</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="garuda.js"></script>
+</head>
+<body>
+<br>
+    <div id="app" class="container">
+
+        <span class="badge text-bg-info">{{ dp_display }}</span>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic1">Uang Muka (DP)</span>
+            <input type="text" @keyup="enterHitungAndDp" class="form-control" v-model="dp" placeholder="DP" aria-label="" aria-describedby="basic1">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic2">Tenor</span>
+            <input type="text" @keyup="enterHitung" class="form-control" placeholder="5" v-model="tenor" aria-label="" aria-describedby="basic2">
+        </div>
+        
+        <span class="badge text-bg-info">{{ total_pinjaman_display }}</span>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic3">Total Pinjaman</span>
+            <input type="text" @keyup="enterHitungAndTotal" class="form-control" placeholder="Rp 250.000.000" v-model="total" aria-label="" aria-describedby="basic3">
+        </div>
+
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="basic4">Bunga</span>
+            <input type="text" @keyup="enterHitung" class="form-control" placeholder="%" v-model="bunga" aria-label="" 
+            aria-describedby="basic4">
+        </div>
+        <hr>
+        <div class="alert alert-info" role="alert">
+           Jumlah Cicilan : <strong>{{ hasil }}</strong>
+        </div>
+          
+
+        <button class="btn btn-primary" @click="hitung">Hitung</button>
+          
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+ 
+    <script>
+        new Vue({
+            el : '#app',
+            data :{
+                tenor: 0,
+                dp: 0,
+                total: 0,
+                bunga: 2,
+                hasil :0,
+                total_pinjaman_display:null,
+                dp_display:null
+            },
+            methods: {
+                enterHitung : function(e){
+                    this.hitung()
+                },
+                enterHitungAndDp: function(e){
+                    this.dp_display = _moneyFormat(this.dp)
+                    this.hitung();
+                },
+                enterHitungAndTotal: function(e){
+                    this.total_pinjaman_display = _moneyFormat(this.total)
+                    this.hitung();
+                },
+                hitung : function(){
+                     var hasil = parseFloat(this.total-this.dp);
+                     console.log(_moneyFormat(hasil));
+
+                     var bulan = this.tenor * 12;
+                     var final = (hasil * this.tenor ) / bulan;
+                     final = parseFloat(final);
+
+                     var result = (final * this.bunga ) / 100;
+                     result = parseFloat(result);
+
+                     this.hasil = _moneyFormat(Math.ceil(result));
+                }
+            },
+        })
+    </script>
+    
+</body>
+</html>
